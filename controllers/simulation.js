@@ -1,4 +1,5 @@
 import simulateProjectile from "../physics/models/Projectile";
+import simulateForceMotion from "../physics/models/dynamics" 
 
 const Simulation= require("../models/simulation");
 const eulerStep= require("../physics/integrator");
@@ -44,3 +45,21 @@ export const projectileRoute=async(req,res)=>{
     res.status(200).json(simulation);
 }
 
+export const forceRoute= async(req, res)=>{
+    const{mass, force, x0=0, y0=0, vx0=0, vy0=0, dt=0.01, maxTime=10}= req.body;
+    if(!mass || !force){
+        return res.status(400).json({
+            error: "Mass and forces required!!"
+        })
+    }
+    const result = simulateForceMotion({
+        x0, y0, vx0, vy0, force, mass, dt, maxTime
+    })
+    const simulation = await Simulation.create({
+        type: "force-motion",
+        input: req.body,
+        output: result,
+        timeStep: dt
+    })
+    res.status(200).json(simulation);
+}
