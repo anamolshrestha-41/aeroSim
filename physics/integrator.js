@@ -1,3 +1,4 @@
+//2d
 const eulerStep = (state, ax, ay, dt) => {
     return {
         x: state.x + state.vx * dt,
@@ -6,4 +7,14 @@ const eulerStep = (state, ax, ay, dt) => {
         vy: state.vy + ay * dt
     }
 }
-module.exports = eulerStep;
+
+//rotational
+const eulerStepRot=(state, alpha, dt)=>{
+    return{
+        theta: state.theta + state.omega *dt,
+        alpha: state.alpha + alpha * dt,
+        radius: state.radius
+    }
+}
+
+module.exports = eulerStep, eulerStepRot;

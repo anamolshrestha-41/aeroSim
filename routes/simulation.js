@@ -5,5 +5,6 @@ const router= express.Router();
 router.post("/test", Simulation.testRoute )
 router.post("/projectile", Simulation.projectileRoute)
 router.post("/force", Simulation.forceRoute)
+router.post("/rotation", Simulation.rotationalRoute)
 
 module.exports=router;

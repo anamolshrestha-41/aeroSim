@@ -1,5 +1,6 @@
 import simulateProjectile from "../physics/models/Projectile";
 import simulateForceMotion from "../physics/models/dynamics" 
+import simulateRotation from "../physics/models/rotation";
 
 const Simulation= require("../models/simulation");
 const eulerStep= require("../physics/integrator");
@@ -62,4 +63,22 @@ export const forceRoute= async(req, res)=>{
         timeStep: dt
     })
     res.status(200).json(simulation);
+}
+
+export const rotationalRoute=async(req,res)=>{
+    const{radius, omega0, alpha=0, dt=0.01, maxTime=10}=req.body;
+
+    const result= simulateRotation({
+        radius,
+        omega0,
+        alpha, dt, maxTime
+    })
+
+    const simulation = await Simulation.create({
+        type:"rotation",
+        input: req.body,
+        output: result,
+        timeStep: dt
+    })
+    res.status(200).json(simulation)
 }
