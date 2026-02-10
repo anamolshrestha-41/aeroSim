@@ -1,5 +1,6 @@
 import simulateProjectile from "../physics/models/Projectile";
 import simulateForceMotion from "../physics/models/dynamics" 
+import simulateWithEnergy from "../physics/models/forceEnergy";
 import simulateRotation from "../physics/models/rotation";
 
 const Simulation= require("../models/simulation");
@@ -81,4 +82,15 @@ export const rotationalRoute=async(req,res)=>{
         timeStep: dt
     })
     res.status(200).json(simulation)
+}
+
+export const energyRoute= async(req,res)=>{
+const result= simulateWithEnergy(req.body);
+const simulation= await Simulation.create({
+    type: "energy",
+    input: req.body,
+    output: result,
+    timeStep: req.body.dt
+})
+res.status(200).json(simulation)
 }
