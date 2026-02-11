@@ -7,5 +7,6 @@ router.post("/projectile", Simulation.projectileRoute)
 router.post("/force", Simulation.forceRoute)
 router.post("/rotation", Simulation.rotationalRoute)
 router.post("/energy", Simulation.energyRoute)
+router.post("/orbit", Simulation.orbitRoute)
 
 module.exports=router;
