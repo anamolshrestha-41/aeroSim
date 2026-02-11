@@ -2,6 +2,7 @@ import simulateProjectile from "../physics/models/Projectile";
 import simulateForceMotion from "../physics/models/dynamics" 
 import simulateWithEnergy from "../physics/models/forceEnergy";
 import simulateOrbit from "../physics/models/orbit";
+import simulateReentry from "../physics/models/reEntry";
 import simulateRotation from "../physics/models/rotation";
 
 const Simulation= require("../models/simulation");
@@ -100,6 +101,17 @@ export const orbitRoute=async(req,res)=>{
     const result= simulateOrbit(req.body);
     const simulation= await Simulation.create({
         type: "orbit",
+        input: req.body,
+        output: result,
+        timeStep: req.body.dt
+    })
+    res.status(200).json(simulation)
+}
+
+export const reentryRoute= async(req,res)=>{
+    const result = simulateReentry(req.body);
+    const simulation= await Simulation.create({
+        type: "reentry",
         input: req.body,
         output: result,
         timeStep: req.body.dt
