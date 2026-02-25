@@ -1,3 +1,6 @@
+import AircraftState from "../physics/aircraft/aircraftState";
+import LongitudinalModel from "../physics/aircraft/longitudinalModel";
+import PID from "../physics/aircraft/pid";
 import simulateProjectile from "../physics/models/Projectile";
 import simulateForceMotion from "../physics/models/dynamics" 
 import simulateWithEnergy from "../physics/models/forceEnergy";
@@ -117,4 +120,15 @@ export const reentryRoute= async(req,res)=>{
         timeStep: req.body.dt
     })
     res.status(200).json(simulation)
+}
+
+export const pitchControlRoute= async(req,res)=>{
+  const result= simulateAircraft(req.body);
+
+  res.status(200).json({
+    type: "aircraft",
+    input: req.body,
+    output: result,
+    timeStep: req.body.dt
+  })
 }
