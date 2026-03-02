@@ -10,4 +10,5 @@ router.post("/energy", Simulation.energyRoute)
 router.post("/orbit", Simulation.orbitRoute)
 router.post("/reentry", Simulation.reentryRoute)
 router.post("pitchControl", Simulation.pitchControlRoute);
+router.post("attitude", Simulation.simulateAircraft);
 module.exports=router;

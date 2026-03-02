@@ -8,6 +8,10 @@ import simulateOrbit from "../physics/models/orbit";
 import simulateReentry from "../physics/models/reEntry";
 import simulateRotation from "../physics/models/rotation";
 
+import AircraftState from "../physics/aircraft/aircraftState";
+import update from "../physics/aircraft/longitudinalDynamics";
+import  AircraftSim from "../models/aircraftSimModel"
+
 const Simulation= require("../models/simulation");
 const eulerStep= require("../physics/integrator");
 
@@ -132,3 +136,54 @@ export const pitchControlRoute= async(req,res)=>{
     timeStep: req.body.dt
   })
 }
+
+
+export const simulateAircraft = async (req, res) => {
+  const {
+    mass,
+    S,
+    CL0,
+    CLalpha,
+    CD0,
+    k,
+    maxThrust,
+    x0,
+    z0,
+    vx0,
+    vz0,
+    theta,
+    throttle,
+    dt,
+    maxTime
+  } = req.body;
+
+  const aircraft = { mass, S, CL0, CLalpha, CD0, k, maxThrust };
+
+  let state = new AircraftState(x0, z0, vx0, vz0, theta);
+
+  const output = [];
+  let t = 0;
+
+  while (t <= maxTime && state.z >= 0) {
+    output.push({
+      t,
+      x: state.x,
+      z: state.z,
+      vx: state.vx,
+      vz: state.vz
+    });
+
+    state = update(state, aircraft, throttle, dt);
+    t += dt;
+  }
+
+  const sim = await AircraftSim.create({
+    type: "aircraft3DOF",
+    input: req.body,
+    output,
+    timeStep: dt,
+    method: "Euler"
+  });
+
+  res.json(sim);
+};

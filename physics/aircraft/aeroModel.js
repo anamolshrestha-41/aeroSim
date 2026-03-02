@@ -1,17 +1,16 @@
-const aeroForces= (state, aircraft)=>{
-    const {u, w}= state;
-    const V= Math.sqrt(u**2+w**2);
+const rho=1.225;
+function liftDrag(state, aircraft){
+    const V= state.speed;
+    const alpha= state.theta;
 
-    const rho= 1.225;
-    const qBar= 0.5*rho*V**2;
+    const CL= aircraft.CL0+ aircraft.CLalpha*alpha;
+    const CD= aircraf.CD0+ aircraft.k * CL * CL;
 
-    const Lift= qBar * aircraft.S * aircraft.CL;
-    const Drag= qBar * aircraft.S * aircraft.CD;
+    const q= 0.5 * rho * V * V;;
 
-    return{
-        X: -Drag,
-        Z: -Lift,
-        M: aircraft.CM * qBar * aircraft.S * aircraft.c
-    }
+    const L= q*aircraft.S * CL;
+    const D= q* aircraft.S * CD;
+
+    return {L, D};
 }
-module.exports=aeroForces;
+module.exports=liftDrag
