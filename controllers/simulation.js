@@ -142,24 +142,35 @@ export const simulateAircraft = async (req, res) => {
   const {
     mass,
     S,
+    c, Iyy,
+
     CL0,
     CLalpha,
     CD0,
     k,
+
+    Cm0, Cmalpha, Cmdelta,
+
     maxThrust,
     x0,
     z0,
     vx0,
     vz0,
-    theta,
+    theta0,
+    q0,
+
+
     throttle,
     dt,
     maxTime
   } = req.body;
 
-  const aircraft = { mass, S, CL0, CLalpha, CD0, k, maxThrust };
+  const aircraft = 
+  { mass, S, c, Iyy,
+    CL0, CLalpha, CD0, k,
+    Cm0, Cmalpha, Cmdelta, maxThrust };
 
-  let state = new AircraftState(x0, z0, vx0, vz0, theta);
+  let state = new AircraftState(x0, z0, vx0, vz0, theta0, q0);
 
   const output = [];
   let t = 0;
@@ -170,10 +181,12 @@ export const simulateAircraft = async (req, res) => {
       x: state.x,
       z: state.z,
       vx: state.vx,
-      vz: state.vz
+      vz: state.vz,
+      theta: state.theta,
+      q: state.q
     });
 
-    state = update(state, aircraft, throttle, dt);
+    state = update(state, aircraft, throttle, deltaE, dt);
     t += dt;
   }
 

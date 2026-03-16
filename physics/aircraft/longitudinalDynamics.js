@@ -1,8 +1,9 @@
 const liftDrag = require('./aeroModel');
 const thrustModel = require('./thrustModel');
+const pitchMoment= require('./pitchMoment')
 const g = 9.81;
 
-function update(state, aircraft, throttle, dt) {
+function update(state, aircraft, throttle, deltaE, dt) {
   const { L, D } = liftDrag(state, aircraft);
   const T = thrustModel(throttle, aircraft);
   const W = aircraft.mass * g;
@@ -20,6 +21,12 @@ function update(state, aircraft, throttle, dt) {
 
   state.x += state.vx * dt;
   state.z += state.vz * dt;
+
+  const M= pitchMoment(state, aircraft, deltaE)
+  const qDot= M/aircraft.Iyy
+
+  state.q+= qDot*dt
+  state.theta+=state.q*dt
 
   return state;
 }
